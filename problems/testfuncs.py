@@ -2,9 +2,9 @@ import numpy as np
 from optlib.base import Problem
 
 class Quadratic(Problem):
-    def __init__(self, A: np.ndarray, b: np.ndarray):
+    def __init__(self, A: np.ndarray, b: np.ndarray = None):
         self.A = A
-        self.b = b
+        self.b = b if b is not None else np.zeros(A.shape[0])
     
     def __call__(self, x: np.ndarray):
         return 1/2 * (x.T @ self.A @ x) - self.b.T @ x
@@ -12,7 +12,7 @@ class Quadratic(Problem):
     def grad(self, x: np.ndarray):
         return self.A @ x - self.b
     
-    def hess(self):
+    def hess(self, x: np.ndarray):
         return self.A
 
 
@@ -26,7 +26,7 @@ def make_quadratic(n: int, kappa: int, seed=0):
 
 
 class Rosenbrock2d(Problem):
-    def __init__(self, a: np.float64, b: np.float64):
+    def __init__(self, a: np.float64=1, b: np.float64=100):
         self.a = a
         self.b = b
     
@@ -45,7 +45,7 @@ class Rosenbrock2d(Problem):
         x, y = x[0], x[1]
         a, b = self.a, self.b
         df_dx = 2.0 + 4.0 * b*(3.0 * x**2 - y), -4.0*b*x 
-        df_dy = 2.0*b, 2.0*b
+        df_dy = -4.0*b*x, 2.0*b
         return np.array([df_dx, df_dy], dtype=np.float64)
 
 
