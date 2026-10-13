@@ -30,7 +30,8 @@ class GD(Optimizer):
                 break
             
             # Descent & Convergence check
-            x = x - self.step * grad
+            pk = -grad
+            x = x + self.step * pk
             history["step"].append(self.step)
             n_iter += 1
             
@@ -78,6 +79,9 @@ class LinearCG(Optimizer):
             
         else:
             converged=True
-    
+
+        history["x"].append(xk)
+        history["f"].append(f(xk))
+        history["gradnorm"].append(np.linalg.norm(rk, 2))
         return Result(xk, f(xk), k, converged, history)
         
